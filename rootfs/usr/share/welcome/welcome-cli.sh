@@ -4,7 +4,6 @@
 set -euo pipefail
 
 LOG="/tmp/mainuan-welcome.log"
-CAPPS="/var/capps"
 LAYOUTS="/usr/share/mainuan/layouts"
 
 log()      { echo "[$(date '+%H:%M:%S')] $*" | tee -a "$LOG"; }
@@ -31,7 +30,7 @@ install() {
     pkexec bash -c "
         : # ← implementar aqui
         # apt install -y '$1'
-    " && mkdir -p "$CAPPS" && touch "$CAPPS/$1"
+    " && mkdir -p "$" && touch "$CAPPS/$1"
 }
 
 remove() {
