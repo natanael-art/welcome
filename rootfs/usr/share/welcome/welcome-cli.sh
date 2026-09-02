@@ -23,7 +23,7 @@ url() {
 }
 
 terminal() {
-    konsole --hold -e bash -c "$1" &
+    konsole --hide-menubar --hide-toolbar --hold -e bash -c "$1" &
 }
 
 install() {
