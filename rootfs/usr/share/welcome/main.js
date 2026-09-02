@@ -9,8 +9,8 @@ function createWindow() {
   const win = new BrowserWindow({
     width:  920,
     height: 640,
-    minWidth:  800,
-    minHeight: 560,
+    minWidth:  1200,
+    minHeight: 600,
     title: 'Mainuan — Bem-vindo',
     autoHideMenuBar: true,
     webPreferences: {
