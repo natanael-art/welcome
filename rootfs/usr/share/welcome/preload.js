@@ -2,7 +2,7 @@ const { contextBridge } = require('electron');
 const { execFile, execFileSync } = require('child_process');
 const fs = require('fs');
 
-const CLI = '/usr/bin/welcome-cli.sh';
+const CLI = '/usr/share/welcome/welcome-cli.sh';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   // Compatível com:
