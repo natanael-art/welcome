@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-LOG="/var/log/mainuan-welcome.log"
+LOG="/tmp/mainuan-welcome.log"
 CAPPS="/var/capps"
 LAYOUTS="/usr/share/mainuan/layouts"
 
@@ -55,28 +55,24 @@ layout() {
 
 # ── Dispatcher ────────────────────────────────────────────────────────────────
 
-log "Ação: $*"
 
 case "${1:-}" in
 
     --get-theme)
-                scheme=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null || echo "")
-                [[ "$scheme" == *Dark* ]] && echo "dark" || echo "light" ;;
+                (plasma-apply-colorscheme -l | grep -q '^*') && echo "dark" || echo "light" ;;
 
     --get-color)
                 kreadconfig6 --file kdeglobals --group General --key AccentColor 2>/dev/null || echo "" ;;
 
     accent)     log "Cor de destaque: $2"
-                plasma-apply-colorscheme --accent-color "$2" 2>/dev/null || \
-                kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2"
+                plasma-apply-colorscheme --accent-color "$2" && \
+                plasma-apply-colorscheme --accent-color "$2" && \
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
 
     theme)      log "Tema: $2"
                 case "$2" in
-                    dark)  plasma-apply-colorscheme BreezeDark 2>/dev/null || \
-                           kwriteconfig6 --file kdeglobals --group General --key ColorScheme "BreezeDark" ;;
-                    light) plasma-apply-colorscheme Breeze     2>/dev/null || \
-                           kwriteconfig6 --file kdeglobals --group General --key ColorScheme "Breeze" ;;
+                    dark)  plasma-apply-colorscheme BreezeDark  ;;
+                    light) plasma-apply-colorscheme BreezeLight ;;
                 esac
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
 
@@ -88,7 +84,7 @@ case "${1:-}" in
                     read -p 'Enter para fechar...'
                 " ;;
 
-    firewall)   kcm kcm_ufw ;;
+    firewall)   kcm kcm_firewall;;
 
     codecs)     terminal "
                     echo '=== Mainuan — Codecs de Mídia ==='
@@ -97,7 +93,7 @@ case "${1:-}" in
                     read -p 'Enter para fechar...'
                 " ;;
 
-    drivers)    kcm kcm_driver_manager ;;
+    drivers)    kubuntu-driver-manager ;;
 
     install)    install "$2" ;;
     remove)     remove  "$2" ;;
