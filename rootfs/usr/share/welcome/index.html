@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mainuan — Bem-vindo</title>
+<script src="https://unpkg.com/lucide@0.513.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --accent: #3498db;
+    --accent-rgb: 52,152,219;
+  }
+
+  [data-theme="dark"] {
+    --bg-base:      #0f1117;
+    --bg-surface:   #181c24;
+    --bg-elevated:  #1e2330;
+    --bg-card:      #232838;
+    --border:       #2a3045;
+    --text-primary: #e8eaf0;
+    --text-muted:   #7a85a0;
+    --sidebar-bg:   #13161f;
+  }
+
+  [data-theme="light"] {
+    --bg-base:      #f0f2f7;
+    --bg-surface:   #ffffff;
+    --bg-elevated:  #f7f8fc;
+    --bg-card:      #ffffff;
+    --border:       #dde1ee;
+    --text-primary: #1a1d2e;
+    --text-muted:   #6b7494;
+    --sidebar-bg:   #e4e7f2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    transition: background 0.3s, border-color 0.3s;
+    position: relative;
+    z-index: 10;
+  }
+
+  .nav-group { padding: 10px 10px 0; flex: 1; overflow-y: auto; }
+
+  .nav-label { display: none; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.18s;
+    position: relative;
+    margin-bottom: 1px;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+
+  .nav-item:hover { background: var(--bg-elevated); color: var(--text-primary); }
+
+  .nav-item.active {
+    background: rgba(var(--accent-rgb), 0.12);
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.18);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute; left: 0; top: 20%; bottom: 20%;
+    width: 3px; border-radius: 2px;
+    background: var(--accent);
+  }
+
+  .nav-item i { flex-shrink: 0; }
+
+  /* ── CONTENT ── */
+  #content {
+    flex: 1; overflow-y: auto;
+    background: var(--bg-base);
+    transition: background 0.3s;
+  }
+
+  .page { display: none; padding: 28px 32px; }
+  .page.active { display: block; }
+
+  .page-header { margin-bottom: 24px; }
+  .page-title  { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .page-desc   { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
+  }
+
+  .card:hover { border-color: rgba(var(--accent-rgb), 0.35); box-shadow: 0 2px 16px rgba(0,0,0,0.12); }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none; transition: all 0.18s;
+    font-family: inherit;
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-accent:hover { filter: brightness(1.12); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-danger {
+    background: rgba(231,76,60,0.12);
+    border: 1px solid rgba(231,76,60,0.3);
+    color: #e74c3c;
+  }
+  .btn-danger:hover { background: rgba(231,76,60,0.22); }
+
+  /* ── SECTION ROW ── */
+  .section-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: border-color 0.2s, background 0.3s;
+  }
+
+  .section-row:hover { border-color: rgba(var(--accent-rgb), 0.3); }
+
+  .section-row-label { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+  .section-row-sub   { font-size: 11px; color: var(--text-muted); }
+
+  /* ── COLOR SWATCHES ── */
+  .swatch {
+    width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.18s;
+    flex-shrink: 0;
+  }
+  .swatch:hover  { transform: scale(1.15); }
+  .swatch.active { border-color: var(--text-primary); box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.3); }
+
+  /* ── TOGGLE ── */
+  .toggle { display: flex; align-items: center; gap: 10px; }
+  .toggle-track {
+    width: 40px; height: 22px; border-radius: 11px;
+    background: var(--border); position: relative; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-track.on { background: var(--accent); }
+  .toggle-thumb {
+    position: absolute; top: 3px; left: 3px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; transition: transform 0.2s;
+  }
+  .toggle-track.on .toggle-thumb { transform: translateX(18px); }
+
+  /* ── UNIFIED CARD ── */
+  .app-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
+    cursor: default;
+  }
+  .app-card:hover { border-color: rgba(var(--accent-rgb),0.35); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+
+  .app-icon-square {
+    width: 100%; aspect-ratio: 1 / 1;
+    object-fit: cover; display: block;
+    background: var(--bg-elevated);
+    flex-shrink: 0;
+  }
+  .app-card-body {
+    padding: 12px 14px 14px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 5px; flex: 1;
+  }
+  .app-name { font-size: 13px; font-weight: 600; }
+  .app-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; flex: 1; }
+  .app-card-btn { margin-top: auto; padding-top: 10px; width: 100%; }
+
+  /* ── VIDEO CARD ── */
+  .video-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden; cursor: pointer;
+    display: flex; flex-direction: column;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.18s, background 0.3s;
+  }
+  .video-card:hover { border-color: rgba(var(--accent-rgb),0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.2); transform: translateY(-2px); }
+  .video-thumb {
+    width: 100%; aspect-ratio: 1 / 1;
+    background: var(--bg-elevated);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .video-thumb img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+  .play-overlay {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(var(--accent-rgb), 0.88);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.18s; position: relative; z-index: 1;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+  }
+  .video-card:hover .play-overlay { transform: scale(1.1); }
+  .video-info {
+    padding: 12px 14px 14px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; flex: 1;
+  }
+  .video-title { font-size: 13px; font-weight: 600; }
+  .video-dur   { font-size: 11px; color: var(--text-muted); margin-top: auto; padding-top: 6px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    width: min(90vw, 800px);
+    display: flex; flex-direction: column;
+  }
+  .modal-header {
+    padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px; font-weight: 600;
+  }
+  .modal-body { position: relative; }
+  .modal-body video { width: 100%; display: block; max-height: 60vh; }
+  .modal-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); padding: 4px;
+    border-radius: 6px; display: flex;
+  }
+  .modal-close:hover { color: var(--text-primary); background: var(--bg-elevated); }
+
+  /* ── ACCORDION ── */
+  .accordion {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .accordion-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px;
+    cursor: pointer;
+    background: var(--bg-card);
+    transition: background 0.18s;
+    user-select: none;
+  }
+  .accordion-header:hover { background: var(--bg-elevated); }
+  .accordion-icon-wrap {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .accordion-title { font-size: 13px; font-weight: 600; flex: 1; }
+  .accordion-badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+  .accordion-chevron {
+    color: var(--text-muted); transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .accordion.open .accordion-chevron { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--bg-elevated);
+    border-top: 0px solid var(--border);
+  }
+  .accordion.open .accordion-body {
+    max-height: 600px;
+    border-top-width: 1px;
+  }
+  .accordion-person {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .accordion-person:last-child { border-bottom: none; }
+  .person-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--bg-card);
+  }
+  .person-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .person-name { font-size: 12px; font-weight: 600; }
+  .person-role { font-size: 11px; color: var(--text-muted); }
+
+  /* ── CREDIT CARD (agradecimentos) ── */
+  .qr-box {
+    width: 180px; height: 180px;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 12px; text-align: center;
+    padding: 16px;
+  }
+
+  /* ── CREDIT CARD ── */
+  .credit-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 10px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  /* ── LAYOUT CARD ── */
+  .layout-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+  }
+  .layout-card:hover  { border-color: rgba(var(--accent-rgb),0.4); }
+  .layout-card.active { border-color: var(--accent); background: rgba(var(--accent-rgb),0.07); }
+  .layout-preview {
+    height: 80px; border-radius: 6px;
+    background: var(--bg-elevated); margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+
+  /* scroll */
+  #content::-webkit-scrollbar { width: 6px; }
+  #content::-webkit-scrollbar-track { background: transparent; }
+  #content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* section divider */
+  .section-title {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin: 20px 0 10px;
+  }
+
+  .badge {
+    font-size: 10px; padding: 2px 7px; border-radius: 99px;
+    font-weight: 600; display: inline-flex;
+  }
+  .badge-green { background: rgba(39,174,96,0.15); color: #27ae60; }
+  .badge-blue  { background: rgba(52,152,219,0.15); color: #3498db; }
+
+  .accent-text { color: var(--accent); }
+
+  .welcome-hero {
+    padding: 28px 32px 0;
+  }
+
+  input[type=range] {
+    accent-color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="nav-group" id="nav-group"></div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTENT — gerado dinamicamente pelo JS a partir do CFG
+═══════════════════════════════════════════════════════════ -->
+<main id="content" role="main"></main>
+
+  <!-- ── SOBRE ── -->
+  <div class="page" id="page-sobre">
+    <div class="page-header">
+      <div class="page-title">Sobre o Mainuan</div>
+      <div class="page-desc">Conheça a equipe e os projetos que tornaram este sistema possível.</div>
+    </div>
+
+    <div class="section-title">Equipe Mainuan</div>
+
+    <!-- Desenvolvimento -->
+    <div class="accordion" id="acc-dev">
+      <div class="accordion-header" onclick="toggleAccordion('acc-dev')">
+        <div class="accordion-icon-wrap" style="background:rgba(52,152,219,0.12);">
+          <i data-lucide="code-2" size="18" style="color:#3498db"></i>
+        </div>
+        <span class="accordion-title">Desenvolvimento</span>
+        <span class="accordion-badge" style="background:rgba(52,152,219,0.12);color:#3498db;">Core</span>
+        <i data-lucide="chevron-down" size="16" class="accordion-chevron"></i>
+      </div>
+      <div class="accordion-body" id="acc-dev-body">
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/1/34/34" alt=""></div>
+          <div><div class="person-name">Ana Ferreira</div><div class="person-role">Arquitetura do sistema & integração KDE</div></div>
+        </div>
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/2/34/34" alt=""></div>
+          <div><div class="person-name">Carlos Mendes</div><div class="person-role">Scripts de inicialização & serviços</div></div>
+        </div>
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/3/34/34" alt=""></div>
+          <div><div class="person-name">Priya Nair</div><div class="person-role">Módulos de atualização & segurança</div></div>
+        </div>
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/4/34/34" alt=""></div>
+          <div><div class="person-name">Lucas Oliveira</div><div class="person-role">Welcome App & ferramentas de boas-vindas</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design -->
+    <div class="accordion" id="acc-design">
+      <div class="accordion-header" onclick="toggleAccordion('acc-design')">
+        <div class="accordion-icon-wrap" style="background:rgba(39,174,96,0.12);">
+          <i data-lucide="palette" size="18" style="color:#27ae60"></i>
+        </div>
+        <span class="accordion-title">Design & UX</span>
+        <span class="accordion-badge" style="background:rgba(39,174,96,0.12);color:#27ae60;">Design</span>
+        <i data-lucide="chevron-down" size="16" class="accordion-chevron"></i>
+      </div>
+      <div class="accordion-body" id="acc-design-body">
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/5/34/34" alt=""></div>
+          <div><div class="person-name">Marina Costa</div><div class="person-role">Identidade visual & temas do sistema</div></div>
+        </div>
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/6/34/34" alt=""></div>
+          <div><div class="person-name">Diego Rocha</div><div class="person-role">Ícones, wallpapers & assets gráficos</div></div>
+        </div>
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/7/34/34" alt=""></div>
+          <div><div class="person-name">Sofia Lima</div><div class="person-role">Acessibilidade & testes de usabilidade</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documentação -->
+    <div class="accordion" id="acc-docs">
+      <div class="accordion-header" onclick="toggleAccordion('acc-docs')">
+        <div class="accordion-icon-wrap" style="background:rgba(230,126,34,0.12);">
+          <i data-lucide="book-open" size="18" style="color:#e67e22"></i>
+        </div>
+        <span class="accordion-title">Documentação & Comunidade</span>
+        <span class="accordion-badge" style="background:rgba(230,126,34,0.12);color:#e67e22;">Docs</span>
+        <i data-lucide="chevron-down" size="16" class="accordion-chevron"></i>
+      </div>
+      <div class="accordion-body" id="acc-docs-body">
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/11/34/34" alt=""></div>
+          <div><div class="person-name">Fernanda Castro</div><div class="person-role">Wiki, tutoriais & guias de uso</div></div>
+        </div>
+        <div class="accordion-person">
+          <div class="person-avatar"><img src="https://picsum.photos/id/12/34/34" alt=""></div>
+          <div><div class="person-name">Gustavo Melo</div><div class="person-role">Suporte ao usuário & fórum</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:24px;">Agradecimentos</div>
+
+    <div class="credit-card">
+      <div class="avatar" style="background:rgba(52,152,219,0.1);">
+        <i data-lucide="monitor" size="20" style="color:#3498db"></i>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:600;">KDE e.V.</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+          Pela incrível plataforma KDE Plasma 6 — ambiente de desktop livre e poderoso.
+          <a href="#" style="color:var(--accent);text-decoration:none;">kde.org</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="avatar" style="background:rgba(230,126,34,0.1);">
+        <i data-lucide="circle-dot" size="20" style="color:#e67e22"></i>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:600;">Canonical Ltd. — Ubuntu</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+          Pela base sólida do Ubuntu que sustenta o Mainuan.
+          <a href="#" style="color:var(--accent);text-decoration:none;">ubuntu.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="avatar" style="background:rgba(39,174,96,0.1);">
+        <i data-lucide="terminal" size="20" style="color:#27ae60"></i>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:600;">Comunidade Linux</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+          A todos os colaboradores, empacotadores e usuários que fazem o software livre acontecer.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:16px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;font-size:12px;color:var(--text-muted);line-height:1.7;transition:background 0.3s,border-color 0.3s">
+      Mainuan é uma distribuição Linux baseada em Ubuntu, com KDE Plasma 6 como ambiente de desktop padrão.
+      Este projeto é software livre e de código aberto. Distribuído sob os termos da GPL v3.
+    </div>
+  </div>
+
+  <!-- ── CONTRIBUIR ── -->
+  <div class="page" id="page-contribuir">
+    <div class="page-header">
+      <div class="page-title">Contribuir</div>
+      <div class="page-desc">Apoie o desenvolvimento do Mainuan com uma doação via Pix.</div>
+    </div>
+
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+      <div class="card" style="flex:1;min-width:260px;">
+        <div style="font-size:14px;font-weight:600;margin-bottom:6px">Doação via Pix</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px;line-height:1.6">
+          Sua contribuição ajuda a manter o Mainuan ativo, com atualizações regulares,
+          novos recursos e suporte à comunidade.
+        </div>
+        <div style="display:flex;justify-content:center;">
+          <div class="qr-box">
+            <div>
+              <i data-lucide="qr-code" size="48" style="display:block;margin:0 auto 8px;opacity:.4"></i>
+              QR Code Pix<br/>
+              <span style="font-size:10px">(placeholder)</span>
+            </div>
+          </div>
+        </div>
+        <div id="pix-key-display" style="margin-top:16px;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;font-size:11px;color:var(--text-muted);word-break:break-all;font-family:monospace;">
+          carregando…
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:10px;" onclick="copyPix()">
+          <i data-lucide="copy" size="13"></i> Copiar chave Pix
+        </button>
+      </div>
+
+      <div style="flex:1;min-width:220px;">
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px;">Outras formas de ajudar</div>
+          <div class="section-row" style="margin-bottom:6px;cursor:pointer" onclick="launchCli('github')">
+            <div class="section-row-label" style="font-size:12px;">
+              <i data-lucide="github" size="14" class="accent-text"></i> Contribuir com código
+            </div>
+            <i data-lucide="chevron-right" size="14" style="color:var(--text-muted)"></i>
+          </div>
+          <div class="section-row" style="margin-bottom:6px;cursor:pointer" onclick="launchCli('report')">
+            <div class="section-row-label" style="font-size:12px;">
+              <i data-lucide="bug" size="14" class="accent-text"></i> Reportar um problema
+            </div>
+            <i data-lucide="chevron-right" size="14" style="color:var(--text-muted)"></i>
+          </div>
+          <div class="section-row" style="margin-bottom:0;cursor:pointer" onclick="launchCli('telegram')">
+            <div class="section-row-label" style="font-size:12px;">
+              <i data-lucide="send" size="14" class="accent-text"></i> Comunidade no Telegram
+            </div>
+            <i data-lucide="chevron-right" size="14" style="color:var(--text-muted)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main><!-- /content -->
+
+<!-- ══════════════════════════════════════════════════════════
+     VIDEO MODAL
+═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="video-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span id="modal-title">Tutorial</span>
+      <div style="display:flex;gap:6px;">
+        <button class="modal-close" onclick="toggleFullscreen()" title="Fullscreen">
+          <i data-lucide="maximize-2" size="16"></i>
+        </button>
+        <button class="modal-close" onclick="closeModal()">
+          <i data-lucide="x" size="16"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <video id="modal-video" controls>Seu navegador não suporta vídeo.</video>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+
+/* ══════════════════════════════════════════════════════════
+   CONFIG — injetada pelo Electron via preload como window.MAINUAN_CONFIG
+   Fallback embutido para desenvolvimento sem Electron.
+
+   Tipos de página:
+     "home"    — Início: swatches + botões de ação definidos em homeButtons
+     "apps"    — grade de cards instaláveis (officeApps / browsers)
+     "layouts" — grade de cards de layout
+     "videos"  — grade de cards de vídeo
+     "static"  — HTML já presente no DOM (sobre, contribuir)
+══════════════════════════════════════════════════════════ */
+const DEFAULT_CONFIG = {
+  accent:  '#00828c',
+  palette: ['#aa4400','#cf54d0','#00828c','#ccf97d','#5e787e','#77003e'],
+  pixKey:  '',
+
+  /* ── Páginas — define sidebar e conteúdo ── */
+  pages: [
+    {
+      id: 'inicio', label: 'Início', icon: 'house', type: 'home',
+      title: 'Bem-vindo ao Mainuan', desc: 'Configure seu sistema à sua maneira.'
+    },
+    {
+      id: 'office', label: 'Office', icon: 'briefcase', type: 'apps',
+      title: 'Office', desc: 'Instale ferramentas de produtividade para o seu trabalho.',
+      gridId: 'grid-office', dataKey: 'officeApps'
+    },
+    {
+      id: 'navegadores', label: 'Navegadores', icon: 'globe', type: 'apps',
+      title: 'Navegadores', desc: 'Escolha seu navegador preferido para navegar na web.',
+      gridId: 'grid-nav', dataKey: 'browsers'
+    },
+    // {
+    //   id: 'layout', label: 'Layout', icon: 'layout-dashboard', type: 'layouts',
+    //   title: 'Layout do Desktop', desc: 'Escolha a disposição dos painéis e da área de trabalho.',
+    //   gridId: 'grid-layout'
+    // },
+    {
+      id: 'tutoriais', label: 'Tutoriais', icon: 'play-circle', type: 'videos',
+      title: 'Tutoriais em vídeo', desc: 'Assista aos vídeos para aprender a usar o Mainuan.',
+      gridId: 'grid-videos'
+    },
+    {
+      id: 'sobre',     label: 'Sobre',      icon: 'info',  type: 'static',
+      title: 'Sobre o Mainuan', desc: 'Conheça a equipe e os projetos que tornaram este sistema possível.'
+    },
+    {
+      id: 'contribuir', label: 'Contribuir', icon: 'heart', type: 'static',
+      title: 'Contribuir', desc: 'Apoie o desenvolvimento do Mainuan com uma doação via Pix.'
+    }
+  ],
+
+  /* ── Botões do Início ── */
+  homeButtons: [
+    {
+      section: 'Aparência',
+      rows: [
+        {
+          id: 'theme', label: 'Tema do sistema', sub: 'Escolha entre claro e escuro',
+          icon: 'sun', type: 'theme'
+        },
+        {
+          id: 'accent', label: 'Cor de destaque', sub: 'Escolha a cor principal do sistema',
+          icon: 'palette', type: 'swatches'
+        }
+      ]
+    },
+    {
+      section: 'Segurança & Privacidade',
+      rows: [
+        {
+          label: 'Antivírus', sub: 'Configurar o ClamAV',
+          icon: 'shield-check', btnLabel: 'Configurar', btnIcon: 'external-link', btnStyle: 'outline', action: 'antivirus'
+        },
+        {
+          label: 'Firewall', sub: 'Configurar regras de firewall (UFW)',
+          icon: 'shield', btnLabel: 'Configurar', btnIcon: 'external-link', btnStyle: 'outline', action: 'firewall'
+        }
+      ]
+    },
+    {
+      section: 'Hardware & Mídia',
+      rows: [
+        {
+          label: 'Codecs de mídia', sub: 'Verificar o suporte a formatos de áudio e vídeo',
+          icon: 'film', btnLabel: 'Verificar', btnIcon: 'search', btnStyle: 'outline', action: 'codecs'
+        },
+        {
+          label: 'Drivers adicionais', sub: 'Gerenciar drivers proprietários de hardware',
+          icon: 'cpu', btnLabel: 'Gerenciar', btnIcon: 'external-link', btnStyle: 'outline', action: 'drivers'
+        }
+      ]
+    }
+  ],
+
+  /* ── Dados dos apps ── */
+  officeApps: [
+    { id:'libreoffice', name:'LibreOffice',     desc:'Suite completa: Writer, Calc, Impress',  pkg:'org.libreoffice.LibreOffice',         iconImg:'https://picsum.photos/id/1010/300/300' },
+    { id:'wps',         name:'WPS Office',       desc:'Interface familiar ao MS Office',        pkg:'com.wps.Office',                      iconImg:'https://picsum.photos/id/1030/300/300' },
+    { id:'gdocs',       name:'Google Docs',      desc:'Documentos online com colaboração',      pkg:'webapp.gdocs',                        iconImg:'https://picsum.photos/id/1040/300/300' },
+    { id:'office365',   name:'Office 365 Online',desc:'Suite Microsoft direto no navegador',    pkg:'webapp.office365',                    iconImg:'https://picsum.photos/id/1050/300/300' }
+  ],
+  browsers: [
+    { id:'chrome',    name:'Google Chrome',  desc:'O navegador mais usado no mundo',           pkg:'com.google.Chrome',                   iconImg:'https://picsum.photos/id/1080/300/300' },
+    { id:'edge',      name:'Microsoft Edge', desc:'Compatibilidade com apps Microsoft',        pkg:'com.microsoft.Edge',                   iconImg:'https://picsum.photos/id/1025/300/300' },
+    { id:'brave',     name:'Brave',          desc:'Bloqueio de anúncios integrado',            pkg:'com.brave.Browser',                    iconImg:'https://picsum.photos/id/1015/300/300' },
+    { id:'librewolf', name:'LibreWolf',      desc:'Fork do Firefox focado em privacidade',     pkg:'io.gitlab.librewolf-community',        iconImg:'https://picsum.photos/id/1070/300/300' },
+    { id:'opera',     name:'Opera GX',       desc:'Navegador gamer com controles de recursos', pkg:'com.opera.opera-gx',                  iconImg:'https://picsum.photos/id/1035/300/300' },
+    { id:'tor',       name:'Tor Browser',    desc:'Navegação anônima pela rede Tor',           pkg:'org.torproject.torbrowser-launcher',  iconImg:'https://picsum.photos/id/1090/300/300' }
+  ],
+  layouts: [
+    { id:'plasma-default', name:'Plasma Padrão',  desc:'Layout clássico KDE com barra inferior' },
+    { id:'panel-top',      name:'Painel Superior', desc:'Barra de tarefas no topo, estilo GNOME' },
+    { id:'latte-unity',    name:'Unity-like',      desc:'Dock lateral com indicadores de app'    },
+    { id:'floating',       name:'Flutuante',       desc:'Dock flutuante centralizado na base'     },
+    { id:'minimal',        name:'Minimalista',     desc:'Sem barra visível — apenas atalhos'      },
+    { id:'tiling',         name:'Tiling',          desc:'Janelas automáticas em grade (i3-like)'  }
+  ],
+  videos: [
+    { id:'v1', title:'Conhecendo o sistema',     dur:'0:00', file:'/var/lib/curso-linux/videos/aula_1.mp4', iconImg:'https://picsum.photos/id/200/300/300' },
+    { id:'v2', title:'Conectando a internet',    dur:'0:00', file:'/var/lib/curso-linux/videos/aula_2.mp4', iconImg:'https://picsum.photos/id/210/300/300' },
+    { id:'v3', title:'Personalizando o sistema', dur:'0:00', file:'/var/lib/curso-linux/videos/aula_3.mp4', iconImg:'https://picsum.photos/id/220/300/300' },
+    { id:'v4', title:'Instalando programas',     dur:'0:00', file:'/var/lib/curso-linux/videos/aula_4.mp4', iconImg:'https://picsum.photos/id/230/300/300' },
+    { id:'v5', title:'Aulas online',             dur:'0:00', file:'/var/lib/curso-linux/videos/aula_5.mp4', iconImg:'https://picsum.photos/id/240/300/300' }
+  ]
+};
+
+const CFG = window.MAINUAN_CONFIG
+  ? Object.assign({}, DEFAULT_CONFIG, window.MAINUAN_CONFIG)
+  : DEFAULT_CONFIG;
+
+/* ── ELECTRON BRIDGE ──────────────────────────────────────── */
+
+// Dispara uma ação sem retorno (fire-and-forget)
+function launchCli(action) {
+  if (window.electronAPI?.launchCli) {
+    window.electronAPI.launchCli(action);
+    return;
+  }
+  try {
+    const { exec } = require('child_process');
+    exec(`/usr/bin/welcome-cli.sh ${action}`);
+  } catch(e) { console.log('[welcome-cli]', action); }
+}
+
+// Executa um comando e retorna a saída como string
+function execCli(args) {
+  try {
+    if (window.electronAPI?.execCli) {
+      return window.electronAPI.execCli(args); // síncrono via preload contextBridge
+    }
+    const { execFileSync } = require('child_process');
+    return execFileSync('/usr/bin/welcome-cli.sh', args.split(' '), { encoding: 'utf8' }).trim();
+  } catch(e) { return ''; }
+}
+
+// Lê tema e cor do sistema e aplica na UI
+function fetchSystemState() {
+  const theme = execCli('--get-theme');
+  if (theme === 'dark' || theme === 'light') {
+    document.documentElement.setAttribute('data-theme', theme);
+    updateThemeButtons();
+  }
+
+  const color = execCli('--get-color');
+  if (/^#[0-9a-fA-F]{6}$/.test(color)) {
+    currentAccent = color;
+    applyAccent(color);
+    renderSwatches(currentPalette, color);
+  }
+}
+
+/* ── PALETTE & ACCENT ─────────────────────────────────────── */
+let currentPalette = CFG.palette;
+let currentAccent  = CFG.accent;
+let currentPixKey  = CFG.pixKey;
+
+function hexToRgb(hex) {
+  const h = hex.replace('#','');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+
+function applyAccent(color) {
+  currentAccent = color;
+  const [r,g,b] = hexToRgb(color);
+  document.documentElement.style.setProperty('--accent', color);
+  document.documentElement.style.setProperty('--accent-rgb', `${r},${g},${b}`);
+}
+
+function renderSwatches(palette, activeColor) {
+  const container = document.getElementById('swatch-container');
+  if (!container) return;
+  container.innerHTML = '';
+  palette.forEach(color => {
+    const el = document.createElement('div');
+    el.className = 'swatch' + (color.toLowerCase() === activeColor.toLowerCase() ? ' active' : '');
+    el.style.background = color;
+    el.dataset.color = color;
+    el.onclick = () => pickColor(el);
+    container.appendChild(el);
+  });
+}
+
+function pickColor(el) {
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  applyAccent(el.dataset.color);
+  launchCli(`accent ${el.dataset.color}`);
+}
+
+function updateThemeButtons() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const btnD = document.getElementById('btn-dark');
+  const btnL = document.getElementById('btn-light');
+  if (!btnD || !btnL) return;
+  btnD.className = isDark  ? 'btn btn-accent' : 'btn btn-outline';
+  btnL.className = !isDark ? 'btn btn-accent' : 'btn btn-outline';
+}
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  updateThemeButtons();
+  launchCli(`theme ${t}`);
+  lucide.createIcons();
+}
+
+function updatePixDisplay() {
+  const el = document.getElementById('pix-key-display');
+  if (el) el.textContent = currentPixKey || '(chave não configurada)';
+}
+
+/* ── ACCENT COLOR (compat) ─────────────────────────────────── */
+function setAccent(color) { applyAccent(color); renderSwatches(currentPalette, color); }
+
+/* ── NAVIGATION ───────────────────────────────────────────── */
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('page-' + item.dataset.page).classList.add('active');
+    document.getElementById('content').scrollTop = 0;
+  });
+});
+
+/* ══════════════════════════════════════════════════════════
+   APP CARDS — paginação + poll inteligente
+══════════════════════════════════════════════════════════ */
+
+const PAGE_SIZE = 20;
+
+// Estado de paginação por gridId: { items, currentPage }
+const gridState = {};
+
+function isInstalled(pkg) {
+  try {
+    const fs = require('fs');
+    return fs.existsSync(`/var/capps/${pkg}`);
+  } catch(e) {
+    return installedCache[pkg] || false;
+  }
+}
+
+const installedCache = {};
+
+// Retorna os apps atualmente visíveis num grid
+function visibleApps(gridId) {
+  const state = gridState[gridId];
+  if (!state) return [];
+  const { items, currentPage } = state;
+  const start = currentPage * PAGE_SIZE;
+  return items.slice(start, start + PAGE_SIZE);
+}
+
+// Renderiza os cards da página atual num grid
+function renderGridPage(gridId) {
+  const state  = gridState[gridId];
+  const grid   = document.getElementById(gridId);
+  if (!state || !grid) return;
+
+  const { items, currentPage } = state;
+  const totalPages = Math.ceil(items.length / PAGE_SIZE);
+  const start = currentPage * PAGE_SIZE;
+  const slice = items.slice(start, start + PAGE_SIZE);
+
+  // limpa cards anteriores (mantém pagination se existir)
+  grid.querySelectorAll('.app-card').forEach(c => c.remove());
+
+  // insere cards da fatia atual
+  const frag = document.createDocumentFragment();
+  slice.forEach(app => {
+    const div = document.createElement('div');
+    div.className = 'app-card';
+    div.id = `app-card-${app.id}`;
+    div.innerHTML = `
+      <img class="app-icon-square" src="${app.iconImg}" alt="${app.name}" loading="lazy">
+      <div class="app-card-body">
+        <div class="app-name">${app.name}</div>
+        <div class="app-desc">${app.desc}</div>
+        <div class="app-card-btn" id="btn-wrap-${app.id}"></div>
+      </div>
+    `;
+    frag.appendChild(div);
+  });
+  grid.prepend(frag);
+
+  // atualiza botões dos cards visíveis
+  slice.forEach(app => updateAppBtn(app));
+
+  // atualiza / cria paginação
+  updatePagination(gridId, currentPage, totalPages);
+
+  lucide.createIcons();
+}
+
+function updatePagination(gridId, current, total) {
+  if (total <= 1) {
+    const old = document.getElementById(`pagination-${gridId}`);
+    if (old) old.remove();
+    return;
+  }
+
+  let bar = document.getElementById(`pagination-${gridId}`);
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = `pagination-${gridId}`;
+    bar.style.cssText = `
+      display:flex; align-items:center; justify-content:center;
+      gap:8px; padding:20px 0 4px; grid-column:1/-1;
+    `;
+    document.getElementById(gridId).appendChild(bar);
+  }
+
+  bar.innerHTML = '';
+
+  // prev
+  const prev = document.createElement('button');
+  prev.className = 'btn btn-outline';
+  prev.style.cssText = 'padding:6px 10px;';
+  prev.innerHTML = '<i data-lucide="chevron-left" size="14"></i>';
+  prev.disabled = current === 0;
+  prev.onclick = () => goToGridPage(gridId, current - 1);
+  bar.appendChild(prev);
+
+  // page pills
+  for (let i = 0; i < total; i++) {
+    const pill = document.createElement('button');
+    pill.className = 'btn ' + (i === current ? 'btn-accent' : 'btn-outline');
+    pill.style.cssText = 'min-width:32px;padding:6px 10px;font-size:12px;';
+    pill.textContent = i + 1;
+    pill.onclick = () => goToGridPage(gridId, i);
+    bar.appendChild(pill);
+  }
+
+  // next
+  const next = document.createElement('button');
+  next.className = 'btn btn-outline';
+  next.style.cssText = 'padding:6px 10px;';
+  next.innerHTML = '<i data-lucide="chevron-right" size="14"></i>';
+  next.disabled = current === total - 1;
+  next.onclick = () => goToGridPage(gridId, current + 1);
+  bar.appendChild(next);
+}
+
+function goToGridPage(gridId, page) {
+  if (!gridState[gridId]) return;
+  gridState[gridId].currentPage = page;
+  renderGridPage(gridId);
+  document.getElementById('content').scrollTop = 0;
+}
+
+function updateAppBtn(app) {
+  const wrap = document.getElementById(`btn-wrap-${app.id}`);
+  if (!wrap) return;
+  const inst = isInstalled(app.pkg);
+  const was  = wrap.dataset.installed;
+  const now  = inst ? '1' : '0';
+  if (was === now) return; // sem mudança, evita re-render desnecessário
+  wrap.dataset.installed = now;
+  wrap.innerHTML = inst
+    ? `<button class="btn btn-danger" style="width:100%;justify-content:center;"
+         onclick="toggleApp('${app.id}','${app.pkg}',false)">
+         <i data-lucide="trash-2" size="12"></i> Remover
+       </button>`
+    : `<button class="btn btn-accent" style="width:100%;justify-content:center;"
+         onclick="toggleApp('${app.id}','${app.pkg}',true)">
+         <i data-lucide="download" size="12"></i> Instalar
+       </button>`;
+  lucide.createIcons();
+}
+
+function toggleApp(id, pkg, install) {
+  installedCache[pkg] = install;
+  launchCli(install ? `install ${pkg}` : `remove ${pkg}`);
+  const app = [...CFG.officeApps, ...CFG.browsers].find(a => a.id === id);
+  if (app) updateAppBtn(app);
+}
+
+// Retorna o gridId da aba de apps atualmente ativa, ou null
+function activeAppGridId() {
+  const activePage = CFG.pages.find(p =>
+    p.type === 'apps' &&
+    document.getElementById(`page-${p.id}`)?.classList.contains('active')
+  );
+  return activePage ? activePage.gridId : null;
+}
+
+// Poll inteligente: só roda nos apps visíveis E se a aba estiver ativa
+setInterval(() => {
+  const gridId = activeAppGridId();
+  if (!gridId) return;
+  visibleApps(gridId).forEach(app => updateAppBtn(app));
+}, 1000);
+
+/* ── LAYOUT CARDS ─────────────────────────────────────────── */
+function buildLayoutCard(l, gridId) {
+  const div = document.createElement('div');
+  div.className = 'layout-card';
+  div.id = `layout-${l.id}`;
+  div.innerHTML = `
+    <div class="layout-preview">${getLayoutSvg(l.id)}</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:3px">${l.icon} ${l.name}</div>
+    <div style="font-size:11px;color:var(--text-muted)">${l.desc}</div>
+  `;
+  div.addEventListener('click', () => {
+    document.querySelectorAll('.layout-card').forEach(c => c.classList.remove('active'));
+    div.classList.add('active');
+    launchCli(`layout ${l.id}`);
+  });
+  document.getElementById(gridId).appendChild(div);
+}
+
+function getLayoutSvg(id) {
+  const svgs = {
+    'plasma-default': `<svg width="140" height="70" viewBox="0 0 140 70" fill="none">
+      <rect width="140" height="70" fill="currentColor" opacity=".05"/>
+      <rect x="0" y="58" width="140" height="12" fill="currentColor" opacity=".2" rx="2"/>
+      <rect x="4" y="61" width="20" height="6" fill="currentColor" opacity=".4" rx="2"/>
+      <rect x="30" y="62" width="50" height="4" fill="currentColor" opacity=".2" rx="2"/>
+      <rect x="110" y="61" width="8" height="6" fill="currentColor" opacity=".4" rx="2"/>
+      <rect x="122" y="61" width="8" height="6" fill="currentColor" opacity=".4" rx="2"/>
+    </svg>`,
+    'panel-top': `<svg width="140" height="70" viewBox="0 0 140 70" fill="none">
+      <rect width="140" height="70" fill="currentColor" opacity=".05"/>
+      <rect x="0" y="0" width="140" height="12" fill="currentColor" opacity=".2" rx="2"/>
+      <rect x="4" y="3" width="20" height="6" fill="currentColor" opacity=".4" rx="2"/>
+      <rect x="110" y="3" width="8" height="6" fill="currentColor" opacity=".4" rx="2"/>
+      <rect x="122" y="3" width="8" height="6" fill="currentColor" opacity=".4" rx="2"/>
+    </svg>`,
+    'latte-unity': `<svg width="140" height="70" viewBox="0 0 140 70" fill="none">
+      <rect width="140" height="70" fill="currentColor" opacity=".05"/>
+      <rect x="0" y="0" width="12" height="70" fill="currentColor" opacity=".2" rx="2"/>
+      <rect x="2" y="4" width="8" height="8" fill="currentColor" opacity=".5" rx="2"/>
+      <rect x="2" y="16" width="8" height="8" fill="currentColor" opacity=".4" rx="2"/>
+      <rect x="2" y="28" width="8" height="8" fill="currentColor" opacity=".4" rx="2"/>
+      <rect x="2" y="40" width="8" height="8" fill="currentColor" opacity=".3" rx="2"/>
+    </svg>`,
+    'floating': `<svg width="140" height="70" viewBox="0 0 140 70" fill="none">
+      <rect width="140" height="70" fill="currentColor" opacity=".05"/>
+      <rect x="28" y="56" width="84" height="10" fill="currentColor" opacity=".25" rx="5"/>
+      <rect x="32" y="58" width="12" height="6" fill="currentColor" opacity=".45" rx="3"/>
+      <rect x="48" y="58" width="12" height="6" fill="currentColor" opacity=".35" rx="3"/>
+      <rect x="64" y="58" width="12" height="6" fill="currentColor" opacity=".35" rx="3"/>
+    </svg>`,
+    'minimal': `<svg width="140" height="70" viewBox="0 0 140 70" fill="none">
+      <rect width="140" height="70" fill="currentColor" opacity=".05"/>
+      <circle cx="70" cy="35" r="12" fill="currentColor" opacity=".1"/>
+      <line x1="20" y1="65" x2="120" y2="65" stroke="currentColor" opacity=".15" stroke-width="1"/>
+    </svg>`,
+    'tiling': `<svg width="140" height="70" viewBox="0 0 140 70" fill="none">
+      <rect width="140" height="70" fill="currentColor" opacity=".05"/>
+      <rect x="4" y="4" width="62" height="62" fill="currentColor" opacity=".1" rx="2"/>
+      <rect x="70" y="4" width="66" height="30" fill="currentColor" opacity=".1" rx="2"/>
+      <rect x="70" y="38" width="66" height="28" fill="currentColor" opacity=".1" rx="2"/>
+      <line x1="70" y1="4" x2="70" y2="66" stroke="currentColor" opacity=".2" stroke-width="1"/>
+      <line x1="70" y1="36" x2="136" y2="36" stroke="currentColor" opacity=".2" stroke-width="1"/>
+    </svg>`,
+  };
+  return `<div style="color:var(--text-muted)">${svgs[id] || ''}</div>`;
+}
+
+/* ── VIDEO CARDS ──────────────────────────────────────────── */
+function buildVideoCard(v, gridId) {
+  const div = document.createElement('div');
+  div.className = 'video-card';
+  div.innerHTML = `
+    <div class="video-thumb">
+      <img src="${v.iconImg}" alt="" loading="lazy">
+      <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);border-radius:5px;padding:2px 8px;font-size:10px;color:#fff;z-index:2;">${v.dur}</div>
+      <div class="play-overlay">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+    <div class="video-info">
+      <div class="video-title">${v.title}</div>
+      <div class="video-dur">${v.file.split('/').pop()}</div>
+    </div>
+  `;
+  div.addEventListener('click', () => openVideo(v));
+  document.getElementById(gridId).appendChild(div);
+}
+
+/* ── VIDEO MODAL ──────────────────────────────────────────── */
+function openVideo(v) {
+  document.getElementById('modal-title').textContent = v.title;
+  const vid = document.getElementById('modal-video');
+  vid.src = v.file;
+  document.getElementById('video-modal').classList.add('open');
+  vid.play().catch(()=>{});
+}
+
+function closeModal() {
+  const vid = document.getElementById('modal-video');
+  vid.pause(); vid.src = '';
+  document.getElementById('video-modal').classList.remove('open');
+}
+
+function toggleFullscreen() {
+  const box = document.getElementById('modal-body');
+  if (!document.fullscreenElement) box.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+document.getElementById('video-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ── PIX ──────────────────────────────────────────────────── */
+function copyPix() {
+  const key = currentPixKey || '(chave não configurada)';
+  navigator.clipboard?.writeText(key).then(() => {
+    const btn = event.target.closest('button');
+    if(btn) {
+      const orig = btn.innerHTML;
+      btn.textContent = '✓ Copiado!';
+      setTimeout(() => { btn.innerHTML = orig; lucide.createIcons(); }, 2000);
+    }
+  });
+}
+
+/* ── ACCORDION ────────────────────────────────────────────── */
+function toggleAccordion(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* ══════════════════════════════════════════════════════════
+   PAGE RENDERERS — um por type
+══════════════════════════════════════════════════════════ */
+
+function renderHome(page) {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="welcome-hero">
+      <div class="page-title">Bem-vindo ao <span class="accent-text">Mainuan</span></div>
+      <div class="page-desc">${page.desc}</div>
+    </div>
+    <div style="padding:0 32px 28px" id="home-sections"></div>
+  `;
+  const sections = wrap.querySelector('#home-sections');
+
+  CFG.homeButtons.forEach(group => {
+    const sec = document.createElement('div');
+    sec.className = 'section-title';
+    sec.textContent = group.section;
+    sections.appendChild(sec);
+
+    group.rows.forEach(row => {
+      if (row.type === 'theme') {
+        sections.insertAdjacentHTML('beforeend', `
+          <div class="section-row">
+            <div class="section-row-label">
+              <i data-lucide="${row.icon}" size="16" class="accent-text"></i>
+              <div><div>${row.label}</div><div class="section-row-sub">${row.sub}</div></div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn" id="btn-light" onclick="setTheme('light')">
+                <i data-lucide="sun" size="13"></i> Claro
+              </button>
+              <button class="btn" id="btn-dark" onclick="setTheme('dark')">
+                <i data-lucide="moon" size="13"></i> Escuro
+              </button>
+            </div>
+          </div>`);
+      } else if (row.type === 'swatches') {
+        sections.insertAdjacentHTML('beforeend', `
+          <div class="section-row">
+            <div class="section-row-label">
+              <i data-lucide="${row.icon}" size="16" class="accent-text"></i>
+              <div><div>${row.label}</div><div class="section-row-sub">${row.sub}</div></div>
+            </div>
+            <div id="swatch-container" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+          </div>`);
+      } else {
+        const btnCls = row.btnStyle === 'accent' ? 'btn-accent' : 'btn-outline';
+        sections.insertAdjacentHTML('beforeend', `
+          <div class="section-row">
+            <div class="section-row-label">
+              <i data-lucide="${row.icon}" size="16" class="accent-text"></i>
+              <div><div>${row.label}</div><div class="section-row-sub">${row.sub}</div></div>
+            </div>
+            <button class="btn ${btnCls}" onclick="launchCli('${row.action}')">
+              <i data-lucide="${row.btnIcon}" size="13"></i> ${row.btnLabel}
+            </button>
+          </div>`);
+      }
+    });
+  });
+
+  return wrap;
+}
+
+function renderApps(page) {
+  const items = CFG[page.dataKey] || [];
+  const wrap  = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="page-header">
+      <div class="page-title">${page.title}</div>
+      <div class="page-desc">${page.desc}
+        ${items.length > PAGE_SIZE
+          ? `<span style="margin-left:8px;font-size:11px;color:var(--text-muted)">(${items.length} apps · ${Math.ceil(items.length/PAGE_SIZE)} páginas)</span>`
+          : ''}
+      </div>
+    </div>
+    <div class="card-grid" id="${page.gridId}"></div>
+  `;
+
+  // inicializa estado de paginação para este grid
+  gridState[page.gridId] = { items, currentPage: 0 };
+
+  // renderiza após o DOM estar montado
+  setTimeout(() => renderGridPage(page.gridId), 0);
+  return wrap;
+}
+
+function renderLayouts(page) {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="page-header">
+      <div class="page-title">${page.title}</div>
+      <div class="page-desc">${page.desc}</div>
+    </div>
+    <div class="card-grid" id="${page.gridId}" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))"></div>
+  `;
+  setTimeout(() => CFG.layouts.forEach(l => buildLayoutCard(l, page.gridId)), 0);
+  return wrap;
+}
+
+function renderVideos(page) {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="page-header">
+      <div class="page-title">${page.title}</div>
+      <div class="page-desc">${page.desc}</div>
+    </div>
+    <div class="card-grid" id="${page.gridId}" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))"></div>
+  `;
+  setTimeout(() => CFG.videos.forEach(v => buildVideoCard(v, page.gridId)), 0);
+  return wrap;
+}
+
+const PAGE_RENDERERS = {
+  home:    renderHome,
+  apps:    renderApps,
+  layouts: renderLayouts,
+  videos:  renderVideos,
+};
+
+/* ══════════════════════════════════════════════════════════
+   BOOTSTRAP — gera sidebar + páginas a partir de CFG.pages
+══════════════════════════════════════════════════════════ */
+function bootstrap() {
+  const navGroup = document.getElementById('nav-group');
+  const content  = document.getElementById('content');
+  let firstPage  = true;
+
+  CFG.pages.forEach(page => {
+    /* nav item */
+    const navItem = document.createElement('div');
+    navItem.className = 'nav-item' + (firstPage ? ' active' : '');
+    navItem.dataset.page = page.id;
+    navItem.innerHTML = `<i data-lucide="${page.icon}" size="16"></i> ${page.label}`;
+    navGroup.appendChild(navItem);
+
+    /* page wrapper */
+    const pageDiv = document.createElement('div');
+    pageDiv.className = 'page' + (firstPage ? ' active' : '');
+    pageDiv.id = `page-${page.id}`;
+
+    if (page.type === 'static') {
+      // static pages already exist in DOM as #page-{id} — move them into content
+      const existing = document.getElementById(`page-${page.id}`);
+      if (existing) {
+        existing.className = 'page' + (firstPage ? ' active' : '');
+        content.appendChild(existing);
+        firstPage = false;
+        return;
+      }
+    } else {
+      const renderer = PAGE_RENDERERS[page.type];
+      if (renderer) {
+        const rendered = renderer(page);
+        if (rendered) pageDiv.appendChild(rendered);
+      }
+    }
+
+    content.appendChild(pageDiv);
+    firstPage = false;
+  });
+
+  /* navigation clicks */
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById('page-' + item.dataset.page).classList.add('active');
+      content.scrollTop = 0;
+    });
+  });
+}
+
+/* ── INIT ─────────────────────────────────────────────────── */
+bootstrap();
+
+fetchSystemState(); // puxa tema e cor reais do sistema
+
+applyAccent(currentAccent);
+renderSwatches(currentPalette, currentAccent);
+updateThemeButtons();
+updatePixDisplay();
+
+lucide.createIcons();
+</script>
+</body>
+</html>
