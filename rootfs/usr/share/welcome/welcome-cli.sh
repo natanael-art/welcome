@@ -77,8 +77,8 @@ case "${1:-}" in
 
     theme)      
                 case "$2" in
-                    dark)  plasma-apply-colorscheme BreezeDark  ;;
-                    light) plasma-apply-colorscheme BreezeLight ;;
+                    dark)  plasma-apply-colorscheme DreamGrayDarkColor  ;;
+                    light) plasma-apply-colorscheme DreamGrayLightColor ;;
                 esac
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
 
