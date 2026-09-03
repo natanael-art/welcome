@@ -1,21 +1,32 @@
 #!/usr/bin/env bash
 # /usr/bin/welcome-cli.sh — Mainuan OS · Welcome App CLI
 
+
+declare -A applications_name=(
+    [com.google.Chrome]="Google Chrome"
+    [com.microsoft.Edge]="Microsoft Edge"
+    [com.brave.Browser]="Brave"
+    [io.gitlab.librewolf-community]="LibreWolf"
+    [com.opera.opera-gx]="Opera GX"
+    [org.torproject.torbrowser-launcher]="Tor Browser"
+    
+    [org.libreoffice.LibreOffice]="LibreOffice"
+    [com.wps.Office]="WPS Office"
+    [webapp.gdocs]="Google Docs"
+    [webapp.office365]="Office 365 Online"
+)
+
 set -euo pipefail
 
-LOG="/tmp/mainuan-welcome.log"
 LAYOUTS="/usr/share/mainuan/layouts"
 
-log()      { echo "[$(date '+%H:%M:%S')] $*" | tee -a "$LOG"; }
 die()      { log "ERRO: $*" >&2; exit 1; }
 
 kcm() {
-    log "KCM: $1"
     kcmshell6 "$1" &
 }
 
 url() {
-    log "URL: $1"
     [[ "$1" == *t.me* ]] && command -v telegram-desktop &>/dev/null \
         && { telegram-desktop -- "$1" & return; }
     xdg-open "$1" &
@@ -26,22 +37,15 @@ terminal() {
 }
 
 install() {
-    log "Instalando: $1"
-    pkexec bash -c "
-        : # ← implementar aqui
-        # apt install -y '$1'
-    " && mkdir -p "$" && touch "$CAPPS/$1"
+    flatpak-install-gui --override-appname="${applications_name[$1]}" $1
 }
 
 remove() {
-    log "Removendo: $1"
-    pkexec bash -c "apt remove -y '$1' && apt autoremove -y" \
-        && rm -f "$CAPPS/$1"
+    flatpak-install-gui --override-appname="${applications_name[$1]}" --remove $1
 }
 
 layout() {
     local f="$LAYOUTS/$1.js"
-    log "Layout: $1"
     [[ -f "$f" ]] \
         && qdbus6 org.kde.plasmashell /PlasmaShell \
                org.kde.PlasmaShell.loadLayout "$f" 2>/dev/null \
@@ -68,7 +72,7 @@ case "${1:-}" in
                 plasma-apply-colorscheme --accent-color "$2" && \
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
 
-    theme)      log "Tema: $2"
+    theme)      
                 case "$2" in
                     dark)  plasma-apply-colorscheme BreezeDark  ;;
                     light) plasma-apply-colorscheme BreezeLight ;;
