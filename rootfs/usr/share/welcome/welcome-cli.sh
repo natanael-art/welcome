@@ -37,7 +37,7 @@ url() {
 }
 
 terminal() {
-    konsole --hide-menubar --hide-toolbar --hold -e bash -c "$1" &
+    konsole --hide-menubar --hide-tabbar --hold -e bash -c "$1" &
 }
 
 install() {
@@ -81,11 +81,11 @@ case "${1:-}" in
                 case "$2" in
                     dark)  
                         plasma-apply-colorscheme DreamGrayDarkColor 
-                        kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme Grey-Dark
+                        kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__Grey-Dark
                         ;;
                     light) 
                         plasma-apply-colorscheme DreamGrayLightColor 
-                        kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme Grey-Light
+                        kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__Grey-Light
                         ;;
                 esac
                 kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2"
