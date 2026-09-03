@@ -71,7 +71,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
 
     try {
-      return fs.existsSync(`/var/capps/${pkg}`);
+      return fs.existsSync(`/var/lib/flatpak/app/${pkg}/current/active/files/manifest.json`);
     } catch (error) {
       return false;
     }
