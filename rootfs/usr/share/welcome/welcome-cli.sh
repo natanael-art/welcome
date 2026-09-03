@@ -69,7 +69,7 @@ case "${1:-}" in
     --get-color)
                 kreadconfig6 --file kdeglobals --group General --key AccentColor 2>/dev/null || echo "" ;;
 
-    accent)     log "Cor de destaque: $2"
+    accent)
                 plasma-apply-colorscheme --accent-color "$2" && \
                 plasma-apply-colorscheme --accent-color "$2" && \
                 kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2" && \
