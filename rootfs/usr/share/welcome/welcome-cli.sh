@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# /usr/bin/welcome-cli.sh — Mainuan OS · Welcome App CLI
 
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}";
 cd "${XDG_CONFIG_HOME}";
+
+COLOR_MODE=$((plasma-apply-colorscheme -l | grep -q '^*.*Dark') && echo "Dark" || echo "Light")
+ACCENT_COLOR=$((kreadconfig6 --file kdeglobals --group General --key AccentColor 2>/dev/null || echo "#3daee9") | tr '[:upper:]' '[:lower:]');
 
 declare -A applications_name=(
     [com.google.Chrome]="Google Chrome"
@@ -60,27 +62,35 @@ layout() {
 
 # ── Dispatcher ────────────────────────────────────────────────────────────────
 
-
 case "${1:-}" in
 
     --get-theme)
-                (plasma-apply-colorscheme -l | grep -q '^*.*Dark') && echo "dark" || echo "light" ;;
+                echo -n "${COLOR_MODE}" | tr '[:upper:]' '[:lower:]';;
 
     --get-color)
-                kreadconfig6 --file kdeglobals --group General --key AccentColor 2>/dev/null || echo "" ;;
+                echo -n "${ACCENT_COLOR}" | tr '[:upper:]' '[:lower:]';;
 
     accent)
-                plasma-apply-colorscheme --accent-color "$2" && \
-                plasma-apply-colorscheme --accent-color "$2" && \
-                kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2" && \
-                qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
+                plasma-apply-colorscheme --accent-color "$2"
+                plasma-apply-colorscheme --accent-color "$2"
+                kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2"
+                ;;
 
     theme)      
+                kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key library org.kde.kwin.aurorae
                 case "$2" in
-                    dark)  plasma-apply-colorscheme DreamGrayDarkColor  ;;
-                    light) plasma-apply-colorscheme DreamGrayLightColor ;;
+                    dark)  
+                        plasma-apply-colorscheme DreamGrayDarkColor 
+                        kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme Grey-Dark
+                        ;;
+                    light) 
+                        plasma-apply-colorscheme DreamGrayLightColor 
+                        kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme Grey-Light
+                        ;;
                 esac
-                qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
+                kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2"
+                qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true 
+                ;;
 
     antivirus)  terminal "
                     echo '=== Mainuan — Antivírus (ClamAV) ==='
