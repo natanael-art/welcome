@@ -909,15 +909,6 @@ const PAGE_SIZE = 20;
 // Estado de paginação por gridId: { items, currentPage }
 const gridState = {};
 
-function isInstalled(pkg) {
-  try {
-    const fs = require('fs');
-    return fs.existsSync(`/var/capps/${pkg}`);
-  } catch(e) {
-    return installedCache[pkg] || false;
-  }
-}
-
 const installedCache = {};
 
 // Retorna os apps atualmente visíveis num grid
@@ -1029,7 +1020,7 @@ function goToGridPage(gridId, page) {
 function updateAppBtn(app) {
   const wrap = document.getElementById(`btn-wrap-${app.id}`);
   if (!wrap) return;
-  const inst = isInstalled(app.pkg);
+  const inst = window.electronAPI.isInstalled(app.pkg);
   const was  = wrap.dataset.installed;
   const now  = inst ? '1' : '0';
   if (was === now) return; // sem mudança, evita re-render desnecessário
