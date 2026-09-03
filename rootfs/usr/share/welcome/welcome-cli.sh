@@ -58,7 +58,7 @@ layout() {
 case "${1:-}" in
 
     --get-theme)
-                (plasma-apply-colorscheme -l | grep -q '^*') && echo "dark" || echo "light" ;;
+                (plasma-apply-colorscheme -l | grep -q '^*.*Dark') && echo "dark" || echo "light" ;;
 
     --get-color)
                 kreadconfig6 --file kdeglobals --group General --key AccentColor 2>/dev/null || echo "" ;;
