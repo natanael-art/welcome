@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # /usr/bin/welcome-cli.sh — Mainuan OS · Welcome App CLI
 
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}";
+cd "${XDG_CONFIG_HOME}";
 
 declare -A applications_name=(
     [com.google.Chrome]="Google Chrome"
@@ -70,6 +72,7 @@ case "${1:-}" in
     accent)     log "Cor de destaque: $2"
                 plasma-apply-colorscheme --accent-color "$2" && \
                 plasma-apply-colorscheme --accent-color "$2" && \
+                kwriteconfig6 --file kdeglobals --group General --key AccentColor "$2" && \
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true ;;
 
     theme)      
